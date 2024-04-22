@@ -9,7 +9,7 @@ public class FilmProfile : Profile
 {
     public FilmProfile()
     {
-        //CreateMap<FilmDto, Film>();
+        CreateMap<FilmDto, Film>();
         CreateMap<Film, FilmResponse>();
     }
 }
