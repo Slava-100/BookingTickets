@@ -1,11 +1,15 @@
 ﻿
+using System.Linq.Expressions;
+
 namespace BookingTickets.Core.Contracts;
 
 public interface IRepository<TDto>
 {
-    Task AddAsync(TDto entity);
-    Task RemoveAsync(TDto entity);
+    Task<TDto> AddAsync(TDto entity);
+    Task UpdateAsync(TDto entity);
+    Task DeleteAsync(TDto entity);
     Task<IEnumerable<TDto>> GetAllAsync();
-    Task<TDto> GetByIdAsync(int id);
+    Task<TDto?> GetByIdAsync(Guid id);
+    Task<IEnumerable<TDto>> GetAllWithIncludesAsync(List<Expression<Func<TDto, object>>> includeProperties);
 }
 

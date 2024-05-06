@@ -1,6 +1,4 @@
-﻿
-
-namespace BookingTickets.Core.Models.API;
+﻿namespace BookingTickets.Core.Models.API.Response;
 
 public class FilmResponse : IdContainer
 {

@@ -1,5 +1,4 @@
-﻿using BookingTickets.Core.Contracts;
-using BookingTickets.Core.Models.Dtos;
+﻿using BookingTickets.Core.Models.Dto;
 
 namespace BookingTickets.DataLayer.Repositories;
 

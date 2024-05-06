@@ -1,4 +1,4 @@
-﻿using BookingTickets.Core.Models.Dtos;
+﻿using BookingTickets.Core.Models.Dto;
 
 namespace BookingTickets.Core.Models.DTO;
 
@@ -12,6 +12,5 @@ public class SessionDto : IdContainer
 
     public Guid FilmId { get; set; }
     public FilmDto Film { get; set; }
-
     public List<OrderPlaceDto> OrderPlaces { get; set; }
 }

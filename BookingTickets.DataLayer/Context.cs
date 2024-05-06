@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography.X509Certificates;
 using BookingTickets.Core.Models.DTO;
-using BookingTickets.Core.Models.Dtos;
+using BookingTickets.Core.Models.Dto;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookingTickets.DataLayer;
@@ -63,7 +63,7 @@ public class Context(DbContextOptions<Context> options) : DbContext(options)
         {
             entity.HasKey(x => x.Id);
             entity.Property(u => u.FullName).IsRequired();
-            entity.Property(u => u.Login).IsRequired();
+            entity.Property(u => u.Email).IsRequired();
             entity.Property(u => u.Password).IsRequired();
 
             entity.HasOne<CinemaDto>(u => u.Cinema)

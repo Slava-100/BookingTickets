@@ -205,15 +205,15 @@ namespace BookingTickets.DataLayer.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("cinema_id");
 
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("email");
+
                     b.Property<string>("FullName")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("full_name");
-
-                    b.Property<string>("Login")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("login");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -221,13 +221,17 @@ namespace BookingTickets.DataLayer.Migrations
                         .HasColumnName("password");
 
                     b.Property<string>("Phone")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("phone");
 
                     b.Property<int>("Position")
                         .HasColumnType("integer")
                         .HasColumnName("position");
+
+                    b.Property<string>("Salt")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("salt");
 
                     b.HasKey("Id")
                         .HasName("pk_users");
@@ -238,7 +242,7 @@ namespace BookingTickets.DataLayer.Migrations
                     b.ToTable("users", (string)null);
                 });
 
-            modelBuilder.Entity("BookingTickets.Core.Models.Dtos.FilmDto", b =>
+            modelBuilder.Entity("BookingTickets.Core.Models.Dto.FilmDto", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -333,7 +337,7 @@ namespace BookingTickets.DataLayer.Migrations
 
             modelBuilder.Entity("BookingTickets.Core.Models.DTO.SessionDto", b =>
                 {
-                    b.HasOne("BookingTickets.Core.Models.Dtos.FilmDto", "Film")
+                    b.HasOne("BookingTickets.Core.Models.Dto.FilmDto", "Film")
                         .WithMany("Sessions")
                         .HasForeignKey("FilmId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -396,7 +400,7 @@ namespace BookingTickets.DataLayer.Migrations
                     b.Navigation("Orders");
                 });
 
-            modelBuilder.Entity("BookingTickets.Core.Models.Dtos.FilmDto", b =>
+            modelBuilder.Entity("BookingTickets.Core.Models.Dto.FilmDto", b =>
                 {
                     b.Navigation("Sessions");
                 });

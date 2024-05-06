@@ -1,33 +1,39 @@
-using BookingTickets;
-using BookingTickets.Business;
+using BookingTickets.Business.Extensions;
 using BookingTickets.DataLayer;
 using BookingTickets.Extensions;
+using Serilog;
 
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-
-
-builder.Services.ConfigureApiServices();
-builder.Services.ConfigureBllServices();
-builder.Services.ConfigureDataBase(builder.Configuration);
-builder.Services.ConfigureDalServices();
-builder.Services.AddAutoMapper(typeof(FilmProfile));
-
-var app = builder.Build();
-app.UseMiddleware<ExceptionMiddleware>();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+try
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    var builder = WebApplication.CreateBuilder(args);
+    builder.Logging.ClearProviders();
+
+    Log.Logger = new LoggerConfiguration()
+        .ReadFrom.Configuration(builder.Configuration)
+        .CreateBootstrapLogger();
+
+    // Add services to the container.
+
+    builder.Services.ConfigureApiServices(builder.Configuration);
+    builder.Services.ConfigureBllServices();
+    builder.Services.ConfigureDalServices();
+
+    builder.Services.AddMappers();
+
+    builder.Host.UseSerilog();
+
+    var app = builder.Build();
+    app.UseApplication();
+    app.MapControllers();
+
+    Log.Information("Running app");
+    app.Run();
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
+catch (Exception ex)
+{
+    Log.Fatal(ex.Message);
+}
+finally
+{
+    Log.CloseAndFlush();
+}

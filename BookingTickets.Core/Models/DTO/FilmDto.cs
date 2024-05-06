@@ -1,6 +1,6 @@
 ﻿using BookingTickets.Core.Models.DTO;
 
-namespace BookingTickets.Core.Models.Dtos;
+namespace BookingTickets.Core.Models.Dto;
 
 public class FilmDto : IdContainer
 {
