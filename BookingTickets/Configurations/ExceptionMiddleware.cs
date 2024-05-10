@@ -2,6 +2,7 @@
 using Npgsql;
 using System.Text.Json;
 using BookingTickets.Core.Exceptions;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace BookingTickets.Configurations;
 
@@ -26,11 +27,12 @@ public class ExceptionMiddleware(RequestDelegate next)
         int code = ex switch
         {
             BadRequestException => 400,
-            NotAuthorizedException => 401,
+            AuthenticationException => 401,
             EntityNotFoundException => 404,
-            NotAllowToEditEntityException => 406,
+            AuthorizationException => 406,
             InvalidEmailFormatException
-                or EmailAlreadyExistsException => 422,
+                or EmailAlreadyExistException 
+                or UnprocessibleEntityException => 422,
             NpgsqlException
                 or DbUpdateException => 500,
             _=> 400

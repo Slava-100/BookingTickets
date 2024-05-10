@@ -11,7 +11,7 @@ namespace BookingTickets.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class UsersController(IUserManager usersManager, IMapper mapper) : Controller
+public class UsersController(IUserService usersManager, IMapper mapper) : Controller
 {
     private readonly Serilog.ILogger _logger = Log.ForContext<UsersController>();
 

@@ -1,14 +1,14 @@
-﻿using BookingTickets.Core.Contracts;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using BookingTickets.Core.Contracts;
+using Microsoft.IdentityModel.Tokens;
 
-namespace BookingTickets.Business.Managers;
+namespace BookingTickets.Business.Services;
 
-public class TokenManager(Secrets secret) : ITokenManager
+public class TokenService(Secrets secret) : ITokenService
 {
-    public Task<string> GenerateAccessTokenAsync(IEnumerable<Claim> claims)
+    public string GenerateAccessToken(IEnumerable<Claim> claims)
     {
         var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret.TokenSecret));
         var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha512);
@@ -22,7 +22,7 @@ public class TokenManager(Secrets secret) : ITokenManager
         );
         var tokenString = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
 
-        return Task.FromResult(tokenString);
+        return tokenString;
     }
 }
 

@@ -1,10 +1,8 @@
-﻿using BookingTickets.Core.Models.API;
-using BookingTickets.Core.Models.BLL;
-using BookingTickets.Core.Models.Dto;
+﻿using BookingTickets.Core.Models.BLL;
 
 namespace BookingTickets.Core.Contracts;
 
-public interface IFilmManager
+public interface IFilmService
 {
     Task<IEnumerable<Film>> GetFilmsAsync();
     Task<Guid> AddFilmAsync(Film film);

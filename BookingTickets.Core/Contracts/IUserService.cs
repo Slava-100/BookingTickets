@@ -4,7 +4,7 @@ using BookingTickets.Core.Models.BLL;
 
 namespace BookingTickets.Core.Contracts;
 
-public interface IUserManager
+public interface IUserService
 {
     Task<Guid> AddUserAsync(User user);
     Task<User> GetUserByIdAsync(Guid id);

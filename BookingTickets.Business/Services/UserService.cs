@@ -1,4 +1,7 @@
-﻿using AutoMapper;
+﻿using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
+using AutoMapper;
 using BookingTickets.Business.Validations;
 using BookingTickets.Core.Contracts;
 using BookingTickets.Core.Exceptions;
@@ -7,14 +10,12 @@ using BookingTickets.Core.Models.API.Response;
 using BookingTickets.Core.Models.BLL;
 using BookingTickets.Core.Models.DTO;
 using Serilog;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
 
-namespace BookingTickets.Business.Managers;
-public class UserManager(IRepository<UserDto> baseRepository, IUserRepository userRepository, IMapper mapper, UserValidator userValidator, Secrets secret, ITokenManager tokenManager) : InstructionsForHashPassword, IUserManager
+namespace BookingTickets.Business.Services;
+
+public class UserService(IRepository<UserDto> baseRepository, IUserRepository userRepository, IMapper mapper, UserValidator userValidator, Secrets secret, ITokenService tokenManager) : HashingSettings, IUserService
 {
-    private readonly Serilog.ILogger _logger = Log.ForContext<UserManager>();
+    private readonly Serilog.ILogger _logger = Log.ForContext<UserService>();
     public async Task<User> GetUserByIdAsync(Guid id)
     {
         _logger.Information($"Обращаемся к методу репозитория получение пользователя по id {id}");
@@ -46,25 +47,24 @@ public class UserManager(IRepository<UserDto> baseRepository, IUserRepository us
     {
         _logger.Information("Проверяем переданы ли данные");
         if (string.IsNullOrEmpty(request.Password) || string.IsNullOrEmpty(request.Email))
-            throw new BadRequestException($"{request.Password} и/или {request.Password} пусты");
+            throw new UnprocessibleEntityException($"{request.Password} и/или {request.Password} пусты");
 
         _logger.Information("Проверяем есть ли такой пользователь в базе данных по email");
-        var user = await userRepository.GetUserByEmailAsync(request.Email) ?? throw new NotAuthorizedException("Не пройдена аутентификация");
-
+        var user = await userRepository.GetUserByEmailAsync(request.Email) ?? throw new AuthenticationException("Не пройдена аутентификация");
+        
         _logger.Information("Проверка данных аутентификации");
         var checkPassword = VerifyPassword(request.Password, user.Password, Convert.FromHexString(user.Salt));
         
         if (!checkPassword)
-            throw new NotAuthorizedException("Аутентификация не пройдена");
+            throw new AuthenticationException("Аутентификация не пройдена");
 
         var claims = new List<Claim>
         {
             new(ClaimTypes.Name, user.FullName),
-            new(ClaimTypes.Email, user.Email),
             new(ClaimTypes.Role, user.Position.ToString()),
         };
 
-        var accessToken = await tokenManager.GenerateAccessTokenAsync(claims);
+        var accessToken = tokenManager.GenerateAccessToken(claims);
 
         return new AuthenticatedResponse { Token = accessToken };
     }
@@ -85,7 +85,7 @@ public class UserManager(IRepository<UserDto> baseRepository, IUserRepository us
         }
 
         if (await userRepository.GetUserByEmailAsync(user.Email) is not null)
-            throw new ("Такой Email уже существует");
+            throw new EmailAlreadyExistException("Такой Email уже существует");
 
         user.Password = HashPasword(user.Password, out var salt);
         user.Salt = Convert.ToHexString(salt);

@@ -1,7 +1,7 @@
 ﻿using System.Security.Cryptography;
 
 namespace BookingTickets.Business;
-public class InstructionsForHashPassword
+public class HashingSettings
 {
     public const int keySize = 64;
     public const int iterations = 3;

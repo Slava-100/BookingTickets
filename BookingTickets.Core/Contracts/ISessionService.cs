@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 
 namespace BookingTickets.Core.Contracts;
-public interface ISessionManager
+public interface ISessionService
 {
-    Task<List<Session>> GetSessionsByFilmIdAsync([FromRoute] Guid id, DateTime? dateTime);
+    Task<List<Session>> GetSessionsByFilmIdAndValidByDateAsync([FromRoute] Guid id, DateTime? dateTime);
 }
 

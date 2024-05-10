@@ -5,16 +5,16 @@ using BookingTickets.Core.Models.BLL;
 using BookingTickets.Core.Models.Dto;
 using Serilog;
 
-namespace BookingTickets.Business.Managers;
+namespace BookingTickets.Business.Services;
 
-public class FilmManager(IRepository<FilmDto> baseRepository, IMapper mapper) : IFilmManager
+public class FilmService(IRepository<FilmDto> baseRepository, IMapper mapper) : IFilmService
 {
-    private readonly Serilog.ILogger _logger = Log.ForContext<FilmManager>();
+    private readonly Serilog.ILogger _logger = Log.ForContext<FilmService>();
+
     public async Task<IEnumerable<Film>> GetFilmsAsync()
     {
         _logger.Information("Обращаемся к методу репозитория получение всех фильмов");
-        var callback = await baseRepository.GetAllAsync();
-        var films = mapper.Map<IEnumerable<Film>>(callback);
+        var films = mapper.Map<List<Film>>(await baseRepository.GetAllAsync());
 
         return films;
     }
@@ -25,6 +25,7 @@ public class FilmManager(IRepository<FilmDto> baseRepository, IMapper mapper) : 
         var filmCallback = await baseRepository.AddAsync(mapper.Map<FilmDto>(film));
         return filmCallback.Id;
     }
+
     public async Task UpdateFilmAsync(Film film)
     {
         _logger.Information("Проверяем существует ли фильм с id {id}", film.Id);
@@ -36,6 +37,7 @@ public class FilmManager(IRepository<FilmDto> baseRepository, IMapper mapper) : 
         _logger.Information("Обращаемся к методу репозитория обновления фильма");
         await baseRepository.UpdateAsync(mapper.Map<FilmDto>(film));
     }
+
     public async Task DeleteFilmAsync(Guid id)
     {
         _logger.Information("Проверяем существует ли фильм с id {id}", id);
@@ -59,6 +61,6 @@ public class FilmManager(IRepository<FilmDto> baseRepository, IMapper mapper) : 
         var film = mapper.Map<Film>(callback);
 
         return film;
-    }
+    }   
 }
 

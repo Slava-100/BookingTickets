@@ -10,7 +10,7 @@ namespace BookingTickets.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class FilmsController(IFilmManager filmManager, IMapper mapper) : Controller
+public class FilmsController(IFilmService filmManager, IMapper mapper) : Controller
 {
     private readonly Serilog.ILogger _logger = Log.ForContext<FilmsController>();
 

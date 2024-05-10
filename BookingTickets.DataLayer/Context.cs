@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-using BookingTickets.Core.Models.DTO;
+﻿using BookingTickets.Core.Models.DTO;
 using BookingTickets.Core.Models.Dto;
 using Microsoft.EntityFrameworkCore;
 

@@ -4,12 +4,12 @@ using BookingTickets.Core.Models.BLL;
 using BookingTickets.Core.Models.DTO;
 using Serilog;
 
-namespace BookingTickets.Business.Managers;
-public class SessionManager(IRepository<SessionDto> baseRepository, IMapper mapper) : ISessionManager
+namespace BookingTickets.Business.Services;
+public class SessionService(IRepository<SessionDto> baseRepository, IMapper mapper) : ISessionService
 {
-    private readonly Serilog.ILogger _logger = Log.ForContext<SessionManager>();
+    private readonly Serilog.ILogger _logger = Log.ForContext<SessionService>();
 
-    public async Task<List<Session>> GetSessionsByFilmIdAsync(Guid id, DateTime? dateTime)
+    public async Task<List<Session>> GetSessionsByFilmIdAndValidByDateAsync(Guid id, DateTime? dateTime)
     {
         if (!dateTime.HasValue)
         {
